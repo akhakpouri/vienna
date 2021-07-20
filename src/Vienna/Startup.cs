@@ -3,10 +3,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
+using System;
+using Vienna.Dal;
+using Vienna.Dal.Models;
 
 namespace Vienna
 {
@@ -21,7 +25,7 @@ namespace Vienna
         public IConfiguration Configuration { get; }
         public IHostEnvironment Environment { get; }
 
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -32,6 +36,21 @@ namespace Vienna
                 var redis = ConnectionMultiplexer.Connect(Configuration["Redis:Uri"]);
                 services.AddDataProtection().PersistKeysToStackExchangeRedis(redis);
             }
+
+            services.AddDbContext<ViennaDbContext>(options =>
+                options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("ViennaConnection")));
+
+            services.AddIdentityCore<ApplicationUser>(o =>
+            {
+                o.Stores.MaxLengthForKeys = 128;
+                o.SignIn.RequireConfirmedAccount = true;
+                o.Password.RequiredLength = 8;
+                o.Password.RequireLowercase = true;
+                o.Password.RequireUppercase = true;
+                o.Password.RequiredUniqueChars = 1;
+                o.Lockout.MaxFailedAccessAttempts = 3;
+                o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(2);
+            });
 
             services.AddSpaStaticFiles(configuration =>
             {
