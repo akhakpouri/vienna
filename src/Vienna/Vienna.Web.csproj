@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
-    <SpaRoot>ClientApp\</SpaRoot>
+    <SpaRoot>vienna-app\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
@@ -13,10 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Daytona" Version="1.0.4" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.8" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.62" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +27,23 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="vienna-app\angular.json" />
+    <None Include="vienna-app\e2e\tsconfig.e2e.json" />
+    <None Include="vienna-app\package-lock.json" />
+    <None Include="vienna-app\package.json" />
+    <None Include="vienna-app\src\tsconfig.app.json" />
+    <None Include="vienna-app\src\tsconfig.server.json" />
+    <None Include="vienna-app\src\tsconfig.spec.json" />
+    <None Include="vienna-app\src\tslint.json" />
+    <None Include="vienna-app\tsconfig.json" />
+    <None Include="vienna-app\tslint.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vienna.Dal\Vienna.Dal.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
